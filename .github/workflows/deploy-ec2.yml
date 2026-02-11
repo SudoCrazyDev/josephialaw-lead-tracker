@@ -18,7 +18,7 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDXdbCQ0jiSBnvjvg+eYQCM2Os8yIQJPysoZBFX2EmrtTyCRgDW2UOvd6v/dRoWp/Yobl29x2QefqSnWJBHCrTLeAUgyTOuxTKrEOxLUS1D1oHC/fsJu+J3uXusd6Y8ALnG7N/9Amol7F1iN+Xa17C8Cs8PGQyiroQGLSWGsx52hdYWEdxrrb+Sal/tEpuniCob8TKk6yqNeO71dWhu9LfwflodSALbSNbYFyq+tz6bCLO0KmyLKVfdLDNNr/9l7FlTN059tKnC2frZ+9TGBjfzCz3eiXGRhBjmvC41BxA2U23OTuBc7i2HU7dk5VibSvqzdf2ZZkzRyG1IJRjbVYkGEwf0WFpVWK3xVt40We1V95qzUu98+ow1+PEin2v8dv9BLjFUpO13n6oJx0exTYh73/Q4RSgX15TeF0pa1Qre/UVfMEecDPtsQ+nfzaEFV2AAWizGHZBHjkYWLZKvXuSa9YJx0X5EHKzwiYsKGwTStHyejFGCyWS9cVDF0ECLkXjBkx3RJjTl58tWKJHrpvdly5mJ0gQ136LIoZvK5fO67XElTf5gYNbSgps268qPl2hgkxuuFrCYoa808lSyZyBqRSVO6/wcJYFy0n8ZFmzN0sr0OVOPrHmMO0go19aI8NJhNTyaqro212vQaXGVB3cdp9iJP1gAW0I1ECholx9xYw== info@josephialaw.com" > ~/.ssh/deploy_key
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
 
