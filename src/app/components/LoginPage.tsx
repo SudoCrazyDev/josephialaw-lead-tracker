@@ -112,10 +112,7 @@ export default function LoginPage() {
           Marketing Portal
         </h1>
 
-        <div
-          ref={formRef}
-          className="bg-white rounded-2xl shadow-xl border border-[#e8e8ec] p-8"
-        >
+        <div ref={formRef}>
           <button
             ref={buttonRef}
             type="button"

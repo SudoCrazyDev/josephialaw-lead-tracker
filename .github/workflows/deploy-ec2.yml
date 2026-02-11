@@ -1,0 +1,46 @@
+# Deploy to EC2 (t2.medium) via SSH — Docker + Nginx
+# Add secrets: EC2_HOST, EC2_SSH_KEY, EC2_USER (e.g. ubuntu)
+
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Sync files to EC2
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            --exclude '.git' \
+            --exclude 'node_modules' \
+            --exclude '.next' \
+            --exclude '.env' \
+            --exclude '.env.*' \
+            ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ vars.EC2_DEPLOY_PATH || '/home/ubuntu/josephia' }}/
+
+      - name: Deploy with Docker Compose
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+            "cd ${{ vars.EC2_DEPLOY_PATH || '/home/ubuntu/josephia' }} && \
+             docker compose build --no-cache && \
+             docker compose up -d"
+
+      - name: Clean up SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

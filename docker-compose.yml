@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    # Uncomment to load secrets (NextAuth, Supabase, etc.):
+    # env_file: .env
+    restart: unless-stopped
