@@ -29,6 +29,7 @@ function normalizePayload(body: Record<string, unknown>): {
 }
 
 export async function POST(request: NextRequest) {
+  console.log("[main-contact-form] POST received");
   let statusCode = 500;
   let responseBody: Record<string, unknown> = { error: "Internal error" };
   let requestBody: Record<string, unknown> = {};
@@ -40,6 +41,7 @@ export async function POST(request: NextRequest) {
     if (expectedSecret) {
       const secret = request.headers.get(SECRET_HEADER);
       if (secret !== expectedSecret) {
+        console.log("[main-contact-form] Auth failed: invalid or missing x-webhook-secret");
         statusCode = 401;
         responseBody = { error: "Unauthorized" };
         errorMessage = "Invalid or missing x-webhook-secret";
@@ -54,11 +56,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(responseBody, { status: statusCode });
       }
     }
+    console.log("[main-contact-form] Auth OK (or no secret configured)");
 
     const contentType = request.headers.get("content-type") ?? "";
+    console.log("[main-contact-form] Content-Type:", contentType);
 
     if (contentType.includes("application/json")) {
       requestBody = (await request.json()) as Record<string, unknown>;
+      console.log("[main-contact-form] Parsed JSON body:", JSON.stringify(requestBody));
     } else if (contentType.includes("application/x-www-form-urlencoded")) {
       const text = await request.text();
       const params = new URLSearchParams(text);
@@ -73,7 +78,9 @@ export async function POST(request: NextRequest) {
         phone: params.get("phone") ?? params.get("Phone") ?? undefined,
         Phone: params.get("Phone") ?? undefined,
       };
+      console.log("[main-contact-form] Parsed form body:", JSON.stringify(requestBody));
     } else {
+      console.log("[main-contact-form] Unsupported Content-Type, returning 415");
       statusCode = 415;
       responseBody = {
         error: "Content-Type must be application/json or application/x-www-form-urlencoded",
@@ -91,8 +98,10 @@ export async function POST(request: NextRequest) {
     }
 
     const payload = normalizePayload(requestBody);
+    console.log("[main-contact-form] Normalized payload:", JSON.stringify(payload));
 
     const result = await insertLeadFromWebhook(WEBHOOK_PATH, payload);
+    console.log("[main-contact-form] insertLeadFromWebhook result:", JSON.stringify(result));
 
     if ("error" in result) {
       errorMessage = result.error;
@@ -108,6 +117,7 @@ export async function POST(request: NextRequest) {
       leadId = result.lead_id;
     }
 
+    console.log("[main-contact-form] Creating webhook log, status:", statusCode);
     await createWebhookLog({
       webhook_path: WEBHOOK_PATH,
       method: "POST",
@@ -118,8 +128,10 @@ export async function POST(request: NextRequest) {
       lead_id: leadId,
     });
 
+    console.log("[main-contact-form] Success, returning", statusCode);
     return NextResponse.json(responseBody, { status: statusCode });
-  } catch {
+  } catch (err) {
+    console.error("[main-contact-form] Caught error:", err);
     statusCode = 400;
     responseBody = { error: "Invalid request body" };
     errorMessage = "Invalid request body";
