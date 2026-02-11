@@ -58,9 +58,10 @@ export async function insertLeadFromWebhook(
     webhook_path: webhookPath,
   };
 
-  const { data, error } = await supabase.from("leads").insert(insert).select("id").single();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await supabase.from("leads").insert(insert as any).select("id").single();
   if (error) return { error: error.message };
   if (!data) return { error: "Failed to create lead." };
 
-  return { success: true, lead_id: data.id };
+  return { success: true, lead_id: (data as { id: string }).id };
 }

@@ -35,7 +35,8 @@ export async function createLead(formData: FormData) {
     webhook_path: "manual",
   };
 
-  const { error } = await supabase.from("leads").insert(insert);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await supabase.from("leads").insert(insert as any);
 
   if (error) return { error: error.message };
 

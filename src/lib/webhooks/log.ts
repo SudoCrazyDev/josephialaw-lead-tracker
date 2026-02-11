@@ -15,6 +15,7 @@ export type CreateWebhookLogParams = {
  */
 export async function createWebhookLog(params: CreateWebhookLogParams): Promise<void> {
   const supabase = getSupabaseServer();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await supabase.from("webhook_logs").insert({
     webhook_path: params.webhook_path,
     method: params.method,
@@ -23,5 +24,5 @@ export async function createWebhookLog(params: CreateWebhookLogParams): Promise<
     response_body: params.response_body ?? null,
     error_message: params.error_message ?? null,
     lead_id: params.lead_id ?? null,
-  });
+  } as any);
 }

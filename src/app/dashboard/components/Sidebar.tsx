@@ -26,7 +26,7 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { collapsed, setCollapsed } = useSidebar();
-  const sidebarRef = useRef<HTMLAsideElement>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const logoWrapRef = useRef<HTMLDivElement>(null);
   const labelsRef = useRef<(HTMLSpanElement | null)[]>([]);

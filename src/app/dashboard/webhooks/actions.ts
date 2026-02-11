@@ -61,6 +61,7 @@ export async function getWebhookPaths() {
     .order("webhook_path");
 
   if (error) throw error;
-  const paths = [...new Set((data ?? []).map((r) => r.webhook_path))];
+  const rows = (data ?? []) as { webhook_path: string }[];
+  const paths = [...new Set(rows.map((r) => r.webhook_path))];
   return paths;
 }
