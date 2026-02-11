@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { insertLeadFromWebhook } from "@/lib/webhooks/lead";
 import { createWebhookLog } from "@/lib/webhooks/log";
 
-const WEBHOOK_PATH = "website/main-contact-form";
+const WEBHOOK_PATH = "website/spousal-support-guide";
 const SECRET_HEADER = "x-webhook-secret";
 
 /** Map WordPress / Contact Form 7-style fields to our payload. */
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
   let leadId: string | null = null;
 
   try {
-    const expectedSecret = process.env.WEBHOOK_SECRET_MAIN_CONTACT;
+    const expectedSecret = process.env.WEBHOOK_SECRET_SPOUSAL_SUPPORT_GUIDE;
     if (expectedSecret) {
       const secret = request.headers.get(SECRET_HEADER);
       if (secret !== expectedSecret) {
