@@ -1,5 +1,5 @@
 # Deploy to EC2 (t2.medium) via SSH — Docker + Nginx
-# Add secrets: EC2_HOST, EC2_SSH_KEY, EC2_USER (e.g. ubuntu)
+# Secrets: EC2_HOST, EC2_USER (e.g. ubuntu), EC2_SSH_KEY (private key, e.g. id_rsa — not id_rsa.pub)
 
 name: Deploy to EC2
 
@@ -21,6 +21,7 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh-keygen -y -f ~/.ssh/deploy_key > /dev/null || (echo "Invalid EC2_SSH_KEY: paste the full private key (id_rsa), not the public key" && exit 1)
 
       - name: Sync files to EC2
         run: |

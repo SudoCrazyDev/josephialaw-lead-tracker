@@ -7,8 +7,10 @@ In **Settings → Secrets and variables → Actions**, add:
 | Secret        | Description |
 |---------------|-------------|
 | `EC2_HOST`    | EC2 hostname or IP (e.g. `ec2-xx-xx-xx-xx.compute.amazonaws.com`) |
-| `EC2_SSH_KEY` | Private key for SSH (contents of your `.pem` or deploy key) |
+| `EC2_SSH_KEY` | **Private** key only — full contents of `id_rsa` or your `.pem` file. **Not** the public key (`id_rsa.pub`). |
 | `EC2_USER`    | SSH user (e.g. `ubuntu` for Ubuntu AMI) |
+
+Paste the full private key into `EC2_SSH_KEY` (including the `-----BEGIN ... KEY-----` and `-----END ... KEY-----` lines). On EC2, `authorized_keys` must contain the **matching public key** (`id_rsa.pub`).
 
 Optional **variable** (Settings → Variables):
 
