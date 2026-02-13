@@ -109,8 +109,7 @@ export default function TalkPage() {
             <button
               type="button"
               onClick={startCall}
-              disabled={status === "connecting"}
-              className="px-5 py-2.5 rounded-lg font-medium text-white bg-[#151a6c] hover:bg-[#0f1347] disabled:opacity-60 transition-colors"
+              className="px-5 py-2.5 rounded-lg font-medium text-white bg-[#151a6c] hover:bg-[#0f1347] transition-colors"
             >
               Start call
             </button>
