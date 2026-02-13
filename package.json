@@ -15,7 +15,9 @@
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "retell-client-js-sdk": "^2.0.7",
+    "retell-sdk": "^4.66.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,5 +28,6 @@
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.29.3+sha512.498e1fb4cca5aa06c1dcf2611e6fafc50972ffe7189998c409e90de74566444298ffe43e6cd2acdc775ba1aa7cc5e092a8b7054c811ba8c5770f84693d33d2dc"
 }
