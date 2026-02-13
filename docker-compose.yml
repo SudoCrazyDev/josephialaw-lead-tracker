@@ -7,5 +7,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-    env_file: .env.production
+    # Use .env if present on server; or create .env.production and set env_file to that
+    env_file:
+      - .env
     restart: unless-stopped
